@@ -594,7 +594,7 @@ const unsigned char kExtractor[] = "kExtractor";
         {
             NSDictionary* startTransaction = @{kScheduleTunerChannelTag:self.activeChannelID};
             NSNumber* frequency = tunerChannel.frequency;
-            [self.tuner tuneToFrequency:frequency forTransaction:startTransaction withCallback:^(NSDictionary * setFrequencyTransaction) {
+            [self.tuner startTuningToFrequency:frequency forTransaction:startTransaction withCallback:^(NSDictionary * setFrequencyTransaction) {
                 if(!CheckForErrorInTransaction(setFrequencyTransaction))
                 {
                     NSString* pidFiter = @"0x1ffb";

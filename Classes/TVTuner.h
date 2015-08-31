@@ -42,14 +42,11 @@ typedef void(^retrieveTunersorScheduels_t)(NSArray* wrappers);
 @property(nonatomic, readonly) BOOL canReceiveData;
 @property (nonatomic, assign) dispatch_source_t                 pollingSource;
 -(const uint8_t*) retrieveDataOfMaximumSize:(size_t) availableSize  returningSizeRetrieved:(size_t*)sizeRetrieved;
--(void) setPIDFilters:(NSString*)pidIDsToPass withTransaction:(NSDictionary*)transaction withCallback:(transaction_callback_t)callback; // just retrieve the basic tables and no other data
 -(void) startSettingPIDFilter:(NSString*)pidFilters forTransaction:(NSDictionary*)transaction withCallback:(transaction_callback_t)callback;
 -(void) startStoppingStreamingWithTransaction:(NSDictionary*)transaction withCallback:(transaction_callback_t)callback;
 -(void) startStreamingWithTransaction:(NSDictionary*)transaction withCallback:(transaction_callback_t)callback;
--(void) stopStreamingWithTransaction:(NSDictionary*)transaction withCallback:(transaction_callback_t)callback;
--(void) tuneToFrequency:(NSNumber*)newFrequency forTransaction:(NSDictionary*)transaction withCallback:(transaction_callback_t)callback;
+-(void) startTuningToFrequency:(NSNumber*)newFrequency forTransaction:(NSDictionary*)transaction withCallback:(transaction_callback_t)callback;
 
--(void)tuneToFrequencyTransaction:(NSDictionary*)transaction withCallback:(transaction_callback_t)callback; // keys = kTunerFrequencyTag
 -(void) startRetrievingStatus:(statusTransactionResult_t)statusResultCallback;
 - (void)addOperationWithBlock:(void (^)(void))block;
 
