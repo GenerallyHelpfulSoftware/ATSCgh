@@ -29,6 +29,7 @@
 
 #import "ContentDescriptor.h"
 
+NS_ASSUME_NONNULL_BEGIN
 @interface CaptionService : NSObject
 @property(nonatomic, readonly) NSString* language;
 @property(nonatomic, readonly) BOOL is708DigitalCCService; // otherwise 608
@@ -38,6 +39,9 @@
 @end
 
 
+
 @interface CaptionServiceDescriptor : ContentDescriptor
-@property(nonatomic,readonly) NSArray* services; // CaptionService
+@property(nonatomic,readonly) NSArray<CaptionService *>* services; // CaptionService
 @end
+
+NS_ASSUME_NONNULL_END

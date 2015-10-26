@@ -28,6 +28,7 @@
 //
 
 #import <Foundation/Foundation.h>
+NS_ASSUME_NONNULL_BEGIN
 
 @interface NSData (DigitalTV)
 -(NSData*) dataAfterUncompressionUsingTablesC5;
@@ -35,3 +36,5 @@
 @end
 
 BOOL GetNthBitOfMemory(NSUInteger whichBIt, const unsigned char* rawData);
+
+NS_ASSUME_NONNULL_END

@@ -29,13 +29,15 @@
 
 #import <Foundation/Foundation.h>
 
-
+NS_ASSUME_NONNULL_BEGIN
 @interface LanguageString : NSObject
 @property(nonatomic, readonly) NSString* languageCode;
 @property(nonatomic, readonly) NSString* string;
 
-+(NSArray*)extractFromRawData:(const unsigned char*)streamData;
-+(NSString*) bestMatchFromSet:(NSSet*)setOfLanguageStrings;
++(NSArray<LanguageString*>*)extractFromRawData:(const unsigned char*)streamData;
++(NSString*) bestMatchFromSet:(NSSet<LanguageString*> *)setOfLanguageStrings;
 
--(id) initWithLanguageCode:(NSString*)languageCode andString:(NSString*)string;
+-(instancetype) initWithLanguageCode:(NSString*)languageCode andString:(NSString*)string;
+-(nullable instancetype) init __attribute__((unavailable("init not available")));
 @end
+NS_ASSUME_NONNULL_END

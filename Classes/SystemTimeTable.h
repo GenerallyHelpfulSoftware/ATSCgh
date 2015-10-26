@@ -29,9 +29,9 @@
 
 #import "ATSCTables.h"
 
-
+NS_ASSUME_NONNULL_BEGIN
 @interface SystemTimeTable : ATSCTable
-@property(nonatomic, readonly) NSDate* date;
+@property(nonatomic, readonly) NSDate* __nullable date;
 @property(nonatomic, readonly) unsigned char  UTCOffset;
 @property(nonatomic, readonly) NSTimeInterval clockDifferenceInSeconds; // assumes this table was parsed from very fresh data.
 @property(nonatomic, readonly) NSTimeInterval  timeOfParsing;
@@ -41,3 +41,4 @@
 -(NSDate*) dateFromTimeSince1980:(NSTimeInterval)secondsSince1980;
 
 @end
+NS_ASSUME_NONNULL_END

@@ -96,7 +96,7 @@
     return result;
 }
 
--(id) initWithRawData:(const unsigned char*)streamData
+-(instancetype) initWithRawData:(const unsigned char*)streamData
 {
     if(nil != (self = [super initWithRawData:streamData]))
     {

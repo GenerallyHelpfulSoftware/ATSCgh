@@ -34,6 +34,10 @@
 @protocol TVTuner;
 
 @class ScheduleExtractor;
+
+
+NS_ASSUME_NONNULL_BEGIN
+
 typedef void(^extraction_result_t)(BOOL success);
 
 @interface ScheduleExtractor : NSObject
@@ -56,3 +60,5 @@ extern NSString* const kScheduleParserCompletedScan;
 extern NSString* const kScheduleParserBeginScan;
 
 extern NSString* const kScheduleScanFailedNoAvailableTuners;
+
+NS_ASSUME_NONNULL_END

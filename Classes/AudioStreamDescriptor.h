@@ -81,6 +81,7 @@ typedef enum AudioChannelPriority
 }AudioChannelPriority;
 
 
+NS_ASSUME_NONNULL_BEGIN
 @interface AudioStreamDescriptor : ContentDescriptor //tag 0x81
 @property(nonatomic, readonly) SampleRateEnumeration sampleRate;
 @property(nonatomic, readonly) unsigned char            bsid;
@@ -93,8 +94,10 @@ typedef enum AudioChannelPriority
 @property(nonatomic, readonly) BOOL fullService; // as opposed to a more auxillary source
 @property(nonatomic, readonly) unsigned char            mainID;
 @property(nonatomic, readonly) AudioChannelPriority     priority;
-@property(nonatomic, readonly) NSString*                textDescription;
-@property(nonatomic, readonly) NSString*                language;
-@property(nonatomic, readonly) NSString*                secondChannelLanguage;
+@property(nonatomic, readonly) NSString*         __nullable       textDescription;
+@property(nonatomic, readonly) NSString*         __nullable       language;
+@property(nonatomic, readonly) NSString*       __nullable        secondChannelLanguage;
 @end
+
+NS_ASSUME_NONNULL_END
 

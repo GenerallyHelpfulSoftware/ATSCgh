@@ -29,6 +29,11 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface ContentDescriptor : NSObject
--(id) initWithRawData:(const unsigned char*)streamData;
+-(instancetype) initWithRawData:(const unsigned char*)streamData;
+-(nullable instancetype) init __attribute__((unavailable("init not available")));
 @end
+
+NS_ASSUME_NONNULL_END

@@ -7,8 +7,9 @@
 //
 
 #import "TunerChannel.h"
-#import "BroadcasterModel.h"
 #import "TVBroadcaster.h"
+
+@class Network;
 
 @interface TunerChannel (TV)
 @property(nonatomic, readonly) Network* network;

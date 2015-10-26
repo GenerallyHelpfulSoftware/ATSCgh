@@ -29,6 +29,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString* const kTunerFrequencyTag; // NSNUMBER (integer)
 extern NSString* const kRealChannelTag; // NSNUMBER (integer)
 extern NSString* const kShowChannelInList; // NSNumber (BOOL)
@@ -44,3 +46,5 @@ extern NSString* const kAmericanChannelsTag;
 extern NSString* const kEuropeanChannelsTag;
 extern NSString* const kTaiwanChannelsTag;
 extern NSString* const kAustralianChannelsTag;
+
+NS_ASSUME_NONNULL_END

@@ -40,6 +40,8 @@ typedef enum ATSCServiceType
     // other values reserved
 }ATSCServiceType;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface TerrestrialVirtualChannel : NSObject
 @property(nonatomic, readonly) UInt16 major_channel_number;
 @property(nonatomic, readonly) UInt16 minor_channel_number;
@@ -50,11 +52,14 @@ typedef enum ATSCServiceType
 @property(nonatomic, readonly) UInt16 source_id;
 @property(nonatomic, readonly) UInt16 channel_TSID;
 @property(nonatomic, readonly) UInt16 program_number;
-@property(nonatomic, readonly) NSString* short_name;
+@property(nonatomic, readonly) NSString* __nullable short_name;
 
 @end
 
 @interface TerrestrialVirtualChannelTable : ATSCTable
-@property(nonatomic, readonly) NSArray* channels;
+@property(nonatomic, readonly) NSArray<TerrestrialVirtualChannel*> * channels;
 @property(nonatomic, readonly) UInt16 transport_stream_id; // pid
 @end
+
+
+NS_ASSUME_NONNULL_END

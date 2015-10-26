@@ -30,7 +30,7 @@
 #import "ContentDescriptor.h"
 
 @implementation ContentDescriptor
--(id) initWithRawData:(const unsigned char*)streamData
+-(instancetype) initWithRawData:(const unsigned char*)streamData
 {
     if(nil != (self = [super init]))
     {

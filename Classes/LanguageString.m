@@ -75,7 +75,7 @@
     return [mutableResult copy];
 }
 
--(id) initWithLanguageCode:(NSString*)languageCode andString:(NSString*)string
+-(instancetype) initWithLanguageCode:(NSString*)languageCode andString:(NSString*)string
 {
     if(nil != (self = [super init]))
     {

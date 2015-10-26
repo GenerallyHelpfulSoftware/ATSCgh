@@ -29,7 +29,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ATSCTables.h"
-
+NS_ASSUME_NONNULL_BEGIN
 
 @class MasterGuideTable;
 extern NSString* const kTableTypeKey;
@@ -76,10 +76,8 @@ typedef enum TableDefinitionType
 }TableDefinitionType;
 
 @interface MasterGuideTable : ATSCTable
-@property(nonatomic, readonly) NSDictionary* tableDefinitions;
+@property(nonatomic, readonly) NSDictionary<NSNumber*, NSDictionary*> * tableDefinitions;
 
 @end
 
-
-
-
+NS_ASSUME_NONNULL_END

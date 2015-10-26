@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Generally Helpful Software. All rights reserved.
 //
 
+@import CoreGraphics;
+
 #import "ScheduledShow.h"
 @class EventInformationRecord;
 @class ExtendedTextTable;

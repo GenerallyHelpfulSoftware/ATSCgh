@@ -37,18 +37,24 @@ typedef enum ETMLocation
     kUknownETMLOcation
 }ETMLocation;
 
+NS_ASSUME_NONNULL_BEGIN
+
+@class ContentDescriptor;
+@class LanguageString;
+
 @interface EventInformationRecord : NSObject
 @property(nonatomic, readonly) UInt16 event_id;
 @property(nonatomic, readonly) NSTimeInterval start_time; // seconds since January 6, 1980 (GPS Epoch)
 @property(nonatomic, readonly) ETMLocation extendedTextLocation;
 @property(nonatomic, readonly) NSTimeInterval length_in_seconds;
-@property(nonatomic, readonly) NSArray* titles;
-@property(nonatomic, readonly) NSArray* descriptors;
+@property(nonatomic, readonly) NSArray<LanguageString*>*  titles;
+@property(nonatomic, readonly) NSArray<ContentDescriptor*>* descriptors;
 
 @end
 
 @interface EventInformationTable : ATSCTable
 @property(nonatomic, readonly) UInt16 source_id;
-@property(nonatomic, readonly) NSArray* records; // EventInformationRecord
+@property(nonatomic, readonly) NSArray<EventInformationRecord*>* records; // EventInformationRecord
 @end
 
+NS_ASSUME_NONNULL_END

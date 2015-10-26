@@ -40,7 +40,7 @@
 
 
 @implementation ExtendedAudioSubstream
--(id) initWithConfigurationByte:(unsigned char)aByte
+-(instancetype) initWithConfigurationByte:(unsigned char)aByte
 {
     if(nil != (self = [super init]))
     {
@@ -117,7 +117,7 @@
 @end
 
 @implementation ExtendedAudioStreamDescriptor
--(id) initWithRawData:(const unsigned char*)streamData
+-(instancetype) initWithRawData:(const unsigned char*)streamData
 {
     if(nil != (self = [super initWithRawData:streamData]))
     {

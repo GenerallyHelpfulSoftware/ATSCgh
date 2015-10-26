@@ -29,13 +29,18 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void (^parsingCallback_t)(NSUInteger endIndex, NSDictionary* extractors, NSDictionary* tables);
+NS_ASSUME_NONNULL_BEGIN
+
+typedef void (^parsingCallback_t)(NSUInteger endIndex, NSDictionary* __nullable extractors, NSDictionary* __nullable tables);
 @interface TableExtractor : NSObject
 @property(nonatomic, readonly) NSNumber* pid;
 @property(nonatomic, readonly) unsigned char table_id;
 
 
 +(void) extractTablesFromData:(const unsigned char*)theData ofValidLength:(size_t)validLength withSetOfExtractors:(NSDictionary*)preexisting intoCallback:(parsingCallback_t)callback;
--(id) initWithPID:(NSNumber*)aPid;
+-(instancetype) initWithPID:(NSNumber*)aPid;
+-(nullable instancetype) init __attribute__((unavailable("init not available")));
 
 @end
+
+NS_ASSUME_NONNULL_END

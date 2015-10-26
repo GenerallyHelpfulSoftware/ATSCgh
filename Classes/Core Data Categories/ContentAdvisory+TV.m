@@ -18,42 +18,44 @@
 @implementation ContentAdvisory (TV)
 +(void) extractAdvisoriesFromDescriptors:(ContentAdvisoryDescriptor*)aTable intoShow:(ScheduledShow*)aShow
 {
-    NSEntityDescription* contentAdvisory = [NSEntityDescription entityForName:@"ContentAdvisory" inManagedObjectContext:aShow.managedObjectContext];
-    
-    NSEntityDescription* ratingDescriptionEntity = [NSEntityDescription entityForName:@"RatingDescription" inManagedObjectContext:aShow.managedObjectContext];
-    
-    NSEntityDescription* eventRatingEntity = [NSEntityDescription entityForName:@"EventRating" inManagedObjectContext:aShow.managedObjectContext];
-    for(EventRatingRegion* aRegion in aTable.rating_regions)
-    {
-        ContentAdvisory* anAdvisory = [[ContentAdvisory alloc] initWithEntity:contentAdvisory insertIntoManagedObjectContext:aShow.managedObjectContext];
-        anAdvisory.rating_region = [[NSNumber alloc] initWithInt:aRegion.rating_region];
-        NSInteger index = 0;
-        for(EventRatingDimension* aDimension in aRegion.eventRatingDimensions)
+    [aShow.managedObjectContext performBlockAndWait:^{
+        NSEntityDescription* contentAdvisory = [NSEntityDescription entityForName:@"ContentAdvisory" inManagedObjectContext:aShow.managedObjectContext];
+        
+        NSEntityDescription* ratingDescriptionEntity = [NSEntityDescription entityForName:@"RatingDescription" inManagedObjectContext:aShow.managedObjectContext];
+        
+        NSEntityDescription* eventRatingEntity = [NSEntityDescription entityForName:@"EventRating" inManagedObjectContext:aShow.managedObjectContext];
+        for(EventRatingRegion* aRegion in aTable.rating_regions)
         {
-            EventRating* newEventRating = [[EventRating alloc] initWithEntity:eventRatingEntity insertIntoManagedObjectContext:aShow.managedObjectContext];
-            
-            
-            newEventRating.ratingIndex = [NSNumber numberWithInteger:index++];
-            newEventRating.ratingValue = [NSNumber numberWithInteger:aDimension.rating_value];
-            
-            newEventRating.advisory = anAdvisory;
-            [anAdvisory addEventRatingsObject:newEventRating];
+            ContentAdvisory* anAdvisory = [[ContentAdvisory alloc] initWithEntity:contentAdvisory insertIntoManagedObjectContext:aShow.managedObjectContext];
+            anAdvisory.rating_region = [[NSNumber alloc] initWithInt:aRegion.rating_region];
+            NSInteger index = 0;
+            for(EventRatingDimension* aDimension in aRegion.eventRatingDimensions)
+            {
+                EventRating* newEventRating = [[EventRating alloc] initWithEntity:eventRatingEntity insertIntoManagedObjectContext:aShow.managedObjectContext];
+                
+                
+                newEventRating.ratingIndex = [NSNumber numberWithInteger:index++];
+                newEventRating.ratingValue = [NSNumber numberWithInteger:aDimension.rating_value];
+                
+                newEventRating.advisory = anAdvisory;
+                [anAdvisory addEventRatingsObject:newEventRating];
 
-        }
-        
-        for(LanguageString* aLanguageString in aRegion.rating_descriptions)
-        {
-            RatingDescription* newDescription = [[RatingDescription alloc] initWithEntity:ratingDescriptionEntity insertIntoManagedObjectContext:aShow.managedObjectContext];
-            newDescription.locale = aLanguageString.languageCode;
-            newDescription.text = aLanguageString.string;
+            }
             
-            newDescription.advisory = anAdvisory;
-            [anAdvisory addRatingDescriptionsObject:newDescription];
+            for(LanguageString* aLanguageString in aRegion.rating_descriptions)
+            {
+                RatingDescription* newDescription = [[RatingDescription alloc] initWithEntity:ratingDescriptionEntity insertIntoManagedObjectContext:aShow.managedObjectContext];
+                newDescription.locale = aLanguageString.languageCode;
+                newDescription.text = aLanguageString.string;
+                
+                newDescription.advisory = anAdvisory;
+                [anAdvisory addRatingDescriptionsObject:newDescription];
+            }
+            
+            anAdvisory.show = aShow;
+            [aShow addContentAdvisoriesObject:anAdvisory];
         }
-        
-        anAdvisory.show = aShow;
-        [aShow addContentAdvisoriesObject:anAdvisory];
-    }
+    }];
 }
 
 +(ContentAdvisory*) retrieveBestMatchFromArrayOfAdvisories:(NSArray*)arrayOfAdvisories
@@ -68,42 +70,44 @@
 
 -(NSString*) advisoryStringGivenSetOfRatings:(NSSet*)ratings
 {
-    NSString* result = nil;
-    if(self.ratingDescriptions.count)
-    {
-        result = [LocalizedString bestMatchFromSet:self.ratingDescriptions];
-    }
-    
-    if(self.eventRatings)
-    {
-        NSArray* sortedRatings = [ratings.allObjects sortedArrayUsingComparator:^NSComparisonResult(Rating* obj1, Rating* obj2) {
-            return [obj1.index compare:obj2.index];
-        }];
-        for(EventRating* anEventRating in self.eventRatings)
+    __block NSString* result = nil;
+    [self.managedObjectContext performBlockAndWait:^{
+        if(self.ratingDescriptions.count)
         {
-            NSInteger whichDimension = anEventRating.ratingIndex.integerValue;
-            if(whichDimension < sortedRatings.count)
+            result = [LocalizedString bestMatchFromSet:self.ratingDescriptions];
+        }
+        
+        if(self.eventRatings)
+        {
+            NSArray* sortedRatings = [ratings.allObjects sortedArrayUsingComparator:^NSComparisonResult(Rating* obj1, Rating* obj2) {
+                return [obj1.index compare:obj2.index];
+            }];
+            for(EventRating* anEventRating in self.eventRatings)
             {
-                Rating* theRating = sortedRatings[whichDimension];
-                NSString* theTitle = [LocalizedString bestMatchFromSet:theRating.titles];
-                if(theTitle.length)
+                NSInteger whichDimension = anEventRating.ratingIndex.integerValue;
+                if(whichDimension < sortedRatings.count)
                 {
-                    if(result.length)
+                    Rating* theRating = sortedRatings[whichDimension];
+                    NSString* theTitle = [LocalizedString bestMatchFromSet:theRating.titles];
+                    if(theTitle.length)
                     {
-                        result = [result stringByAppendingFormat:@" %@", theTitle];
+                        if(result.length)
+                        {
+                            result = [result stringByAppendingFormat:@" %@", theTitle];
+                        }
+                        else
+                        {
+                            result = theTitle;
+                        }
                     }
-                    else
+                    if(theRating.isGraduated && anEventRating.ratingValue != nil)
                     {
-                        result = theTitle;
+                        result = [result stringByAppendingFormat:@" (%@)", anEventRating.ratingValue.stringValue];
                     }
-                }
-                if(theRating.isGraduated && anEventRating.ratingValue != nil)
-                {
-                    result = [result stringByAppendingFormat:@" (%@)", anEventRating.ratingValue.stringValue];
                 }
             }
         }
-    }
+    }];
     return result;
 }
 

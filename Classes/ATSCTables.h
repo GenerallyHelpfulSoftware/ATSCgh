@@ -29,6 +29,9 @@
 
 #import <Foundation/Foundation.h>
 #import "TableExtractor.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
 typedef struct
 {
     unsigned char table_id;
@@ -69,15 +72,13 @@ typedef struct
 }PacketHeader;
 
 
-
-
-
 @interface ATSCTable : NSObject
 @property(nonatomic, readonly) TableHeader tableHeader;
 @property(nonatomic, readonly) PacketHeader packetHeader;
 @property(nonatomic, readonly) UInt16 sectionNumber;
 @property(nonatomic, readonly) UInt16 lastSectionNumber;
--(id)initWithTableHeader:(TableHeader)tableHeader packetHeader:(PacketHeader)packetHeader rawData:(const unsigned char*) streamData;
+-(instancetype)initWithTableHeader:(TableHeader)tableHeader packetHeader:(PacketHeader)packetHeader rawData:(const unsigned char*) streamData;
+-(nullable instancetype) init __attribute__((unavailable("init not available")));
 -(NSString*) uniqueKey;
 @end
 
@@ -90,3 +91,5 @@ extern const size_t kPacketHeaderSerializedSizeBytes;
 extern const size_t kMinimumTableSizeBytes;
 
 #define kSizeOfATSCPacket 188
+
+NS_ASSUME_NONNULL_END

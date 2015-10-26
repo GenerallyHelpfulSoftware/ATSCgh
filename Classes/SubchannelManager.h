@@ -36,12 +36,14 @@
 @class TerrestrialVirtualChannelTable;
 
 
-typedef void (^channel_retrieval_t)(TunerChannel* tunerChannel, NSError* error);
-typedef void (^subchannel_retrieval_t)(TunerSubchannel* tunerChannel, NSError* error);
+NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^channelIDs_retrieval_t)(NSArray* favoriteChannels, NSError*error);
+typedef void (^channel_retrieval_t)(TunerChannel* __nullable tunerChannel, NSError* __nullable error);
+typedef void (^subchannel_retrieval_t)(TunerSubchannel* __nullable tunerChannel, NSError* __nullable error);
 
-typedef void(^scheduledShow_retrieval_t)(ScheduledShow* aShow, NSError* error);
+typedef void(^channelIDs_retrieval_t)(NSArray<NSManagedObjectID*> * __nullable favoriteChannels, NSError* __nullable  error);
+
+typedef void(^scheduledShow_retrieval_t)(ScheduledShow* __nullable aShow, NSError* __nullable error);
 typedef void(^cleanOldShows_t)();
 
 @interface SubchannelManager : NSObject
@@ -73,18 +75,20 @@ typedef void(^cleanOldShows_t)();
 -(NSFetchedResultsController*) newSheduledShowsSortTimeResultsController;
 -(NSFetchedResultsController*) newSheduledShowsSortChannelsResultsController;
 
--(NSFetchedResultsController*) newChannelsFetchResultsControllerForStandards:(NSArray*)standards;
--(NSFetchedResultsController*) newSeenChannelsFetchResultsControllerForStandards:(NSArray*)standards;
--(NSFetchedResultsController*) newFavoriteChannelsFetchResultsControllerForStandards:(NSArray*)standards;
+-(NSFetchedResultsController*) newChannelsFetchResultsControllerForStandards:(NSArray<NSString*>*)standards;
+-(NSFetchedResultsController*) newSeenChannelsFetchResultsControllerForStandards:(NSArray<NSString*>*)standards;
+-(NSFetchedResultsController*) newFavoriteChannelsFetchResultsControllerForStandards:(NSArray<NSString*>*)standards;
 -(NSFetchedResultsController*) newFavoriteOrActiveChannelsFetchResultsController;
 
 -(NSFetchedResultsController*) newFavoriteChannelsFetchResultsController;
 
--(NSArray*)activeChannels;
--(void) makeSetActive:(NSSet*) setOfTunerChannels; //
+-(nullable NSArray<TunerChannel*>*)activeChannels;
+-(void) makeSetActive:(NSSet<TunerChannel*>*) setOfTunerChannels; //
 -(void) cleanOldShows:(cleanOldShows_t)callback;
 -(void) saveOut;
 @end
 
 extern NSString* const kUpdatedScheduledShows;
 extern NSString* const kFavoriteSubchannelsChanged;
+
+NS_ASSUME_NONNULL_END

@@ -84,7 +84,7 @@
     return result;
 }
 
--(id)initWithTableHeader:(TableHeader)aHeader packetHeader:(PacketHeader)packetHeader rawData:(const unsigned char*) streamData
+-(instancetype)initWithTableHeader:(TableHeader)aHeader packetHeader:(PacketHeader)packetHeader rawData:(const unsigned char*) streamData
 {
     if(nil != (self = [super initWithTableHeader:aHeader packetHeader:packetHeader rawData:streamData]))
     {
@@ -116,6 +116,10 @@
                 
                 aRecord.titles = [LanguageString extractFromRawData:&streamData[byteOffset]];
                 byteOffset += title_length;
+            }
+            else
+            {
+                aRecord.titles = [NSArray new];
             }
             UInt16 descriptors_length = (15 & streamData[byteOffset]) << 8 | streamData[byteOffset+1];
             byteOffset += 2;

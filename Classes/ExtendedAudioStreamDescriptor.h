@@ -67,10 +67,11 @@ typedef enum SubstreamChannelSetup
 
 
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface ExtendedAudioSubstream : NSObject
 @property(nonatomic, readonly) short                    index; // 1, 2 or 3
-@property(nonatomic, readonly) NSString*                language;
+@property(nonatomic, readonly) NSString*     __nullable language;
 @property(nonatomic, readonly) AudioServiceType serviceType;
 @property(nonatomic, readonly) BOOL                 substream_priority;
 @property(nonatomic, readonly) SubstreamChannelSetup    channelSetup;
@@ -83,9 +84,11 @@ typedef enum SubstreamChannelSetup
 @property(nonatomic, readonly) BOOL     fullService;
 @property(nonatomic, readonly) unsigned char          bsid;
 @property(nonatomic, readonly) AudioChannelPriority     priority;
-@property(nonatomic, readonly) NSString*                language;
-@property(nonatomic, readonly) NSString*                secondChannelLanguage;
+@property(nonatomic, readonly) NSString*    __nullable  language;
+@property(nonatomic, readonly) NSString*    __nullable  secondChannelLanguage;
 @property(nonatomic, readonly) unsigned char            mainID;
-@property(nonatomic, readonly) NSArray* substreams;//up to 3
+@property(nonatomic, readonly) NSArray<ExtendedAudioSubstream*> * substreams;//up to 3
 @property(nonatomic, readonly) unsigned char            asvc; // bit field indicating which main services this non-main service is associated with (bit 7 on means it's associated with main service 7, etc)
 @end
+
+NS_ASSUME_NONNULL_END

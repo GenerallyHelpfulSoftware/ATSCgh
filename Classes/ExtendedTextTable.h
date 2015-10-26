@@ -28,10 +28,13 @@
 //
 
 #import "ATSCTables.h"
+@class LanguageString;
+NS_ASSUME_NONNULL_BEGIN
 
 @interface ExtendedTextTable : ATSCTable
 @property(nonatomic, readonly) UInt16 source_id;
 @property(nonatomic, readonly) UInt16 event_id;
-@property(nonatomic, readonly) NSArray* strings; // LanguageStrings
+@property(nonatomic, readonly) NSArray<LanguageString*> * strings; // LanguageString
 @end
 
+NS_ASSUME_NONNULL_END

@@ -27,6 +27,7 @@
 //  Copyright (c) 2013 Generally Helpful Software. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
 #import "SubchannelManager.h"
 #import "MasterGuideTable.h"
 #import "TerrestrialVirtualChannelTable.h"

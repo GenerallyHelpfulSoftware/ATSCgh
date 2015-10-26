@@ -34,7 +34,7 @@
 @end
 
 @implementation TerrestrialVirtualChannel
--(id) initWithRawData:(const unsigned char*) streamData
+-(instancetype) initWithRawData:(const unsigned char*) streamData
 {
     if(nil != (self = [super init]))
     {
@@ -79,7 +79,7 @@
 @end
 
 @implementation TerrestrialVirtualChannelTable
--(id)initWithTableHeader:(TableHeader)aHeader packetHeader:(PacketHeader)packetHeader rawData:(const unsigned char*) streamData
+-(instancetype)initWithTableHeader:(TableHeader)aHeader packetHeader:(PacketHeader)packetHeader rawData:(const unsigned char*) streamData
 {
     if(nil != (self = [super initWithTableHeader:aHeader packetHeader:packetHeader rawData:streamData]))
     {

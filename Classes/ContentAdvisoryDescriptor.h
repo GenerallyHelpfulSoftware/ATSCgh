@@ -30,10 +30,15 @@
 #import "ContentDescriptor.h"
 
 
+NS_ASSUME_NONNULL_BEGIN
+
+@class LanguageString;
+@class EventRatingDimension;
+
 @interface EventRatingRegion : NSObject
 @property(nonatomic, readonly) unsigned char rating_region;
-@property(nonatomic, readonly) NSArray* rating_descriptions; // LanguageString
-@property(nonatomic, readonly) NSArray* eventRatingDimensions; //EventRatingDimension
+@property(nonatomic, readonly) NSArray<LanguageString*>* rating_descriptions; // LanguageString
+@property(nonatomic, readonly) NSArray<EventRatingDimension*>* eventRatingDimensions; //EventRatingDimension
 @end
 
 
@@ -48,5 +53,7 @@
 
 
 @interface ContentAdvisoryDescriptor : ContentDescriptor
-@property(nonatomic, readonly) NSArray* rating_regions;
+@property(nonatomic, readonly) NSArray<EventRatingRegion*>* rating_regions;
 @end
+
+NS_ASSUME_NONNULL_END

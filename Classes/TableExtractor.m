@@ -193,7 +193,7 @@ BOOL CheckTable(const unsigned char* tableStart, size_t remaining, NSUInteger se
 
 @implementation TableExtractor
 
--(id) initWithPID:(NSNumber*)aPid
+-(instancetype) initWithPID:(NSNumber*)aPid
 {
     if(nil != (self = [super init]))
     {

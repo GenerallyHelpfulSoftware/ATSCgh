@@ -50,7 +50,11 @@ typedef enum ATSCCompressionType
 }ATSCCompressionType;
 
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSString (DigitalTV)
-+(NSString*) stringWithCompression:(ATSCCompressionType)compressionType mode:(unsigned char)mode data:(const unsigned char*) dataPtr byteCount:(NSUInteger)byteCount;
-+(NSString*) stringFromData:(NSData*)stringData withFirstByte:(unsigned char) firstByte;
++(nullable NSString*) stringWithCompression:(ATSCCompressionType)compressionType mode:(unsigned char)mode data:(const unsigned char*) dataPtr byteCount:(NSUInteger)byteCount;
++(nullable NSString*) stringFromData:(NSData*)stringData withFirstByte:(unsigned char) firstByte;
 @end
+
+NS_ASSUME_NONNULL_END

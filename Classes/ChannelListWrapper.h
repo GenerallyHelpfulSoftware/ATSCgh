@@ -39,6 +39,9 @@ typedef enum StandardRegion
     kNumberOfRegions
 } StandardRegion;
 
+
+NS_ASSUME_NONNULL_BEGIN
+
 @interface ChannelListWrapper : NSObject
 @property (nonatomic, readonly) NSInteger numberOfDigitalChannels;
 @property(nonatomic, readonly) NSString* standard;
@@ -47,8 +50,8 @@ typedef enum StandardRegion
 +(ChannelListWrapper*) listWrapperForStandard:(NSString*)standard;
 
 -(NSInteger) frequencyForChannel:(NSInteger)channel;
--(NSArray*) allChannels; // NSDictionary
+-(NSArray<NSDictionary<NSString*,NSObject*>*>*) allChannels; // NSDictionary
 
 @end
 
-
+NS_ASSUME_NONNULL_END
