@@ -44,7 +44,7 @@ typedef void(^retrieveTunersorScheduels_t)(NSArray* wrappers);
 @protocol TVTuner <NSObject>
 @property(nonatomic, readonly) BOOL canReceiveData;
 @property (nonatomic, assign) dispatch_source_t      __nullable        pollingSource;
--(const uint8_t*) retrieveDataOfMaximumSize:(size_t) availableSize  returningSizeRetrieved:(size_t*)sizeRetrieved;
+-(nullable const uint8_t*) retrieveDataOfMaximumSize:(size_t) availableSize  returningSizeRetrieved:(size_t*)sizeRetrieved;
 -(void) startSettingPIDFilter:(NSString*)pidFilters forTransaction:(NSDictionary*)transaction withCallback:(transaction_callback_t)callback;
 -(void) startStoppingStreamingWithTransaction:(NSDictionary*)transaction withCallback:(transaction_callback_t)callback;
 -(void) startStreamingWithTransaction:(NSDictionary*)transaction withCallback:(transaction_callback_t)callback;
