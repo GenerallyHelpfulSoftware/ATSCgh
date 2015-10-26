@@ -27,8 +27,16 @@
 //  Copyright (c) 2013 Generally Helpful Software. All rights reserved.
 //
 
+
+#if defined(__has_feature) && __has_feature(modules)
+@import Foundation;
+@import CoreData;
+#else
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#endif
+
+
 #import "TunerChannel+TV.h"
 #import "TunerSubchannel+TV.h"
 
