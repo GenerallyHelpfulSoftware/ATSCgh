@@ -694,7 +694,7 @@
     return result;
 }
 
--(NSArray*)allChannels
+-(NSArray<NSDictionary<NSString*,NSObject*>*>*) allChannels
 {
     NSInteger numDigitalChannels  = self.numberOfDigitalChannels;
     NSMutableArray*	mutableResult = [NSMutableArray arrayWithCapacity:numDigitalChannels];

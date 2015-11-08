@@ -27,7 +27,7 @@
 //  Copyright © 2015 Generally Helpful Software. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
 typedef enum StandardRegion
 {

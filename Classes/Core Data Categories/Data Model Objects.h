@@ -6,8 +6,7 @@
 //  Copyright (c) 2014 Generally Helpful Software. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <CoreData/CoreData.h>
+
 #import "LocalizedString.h"
 
 @class ScheduledShow;

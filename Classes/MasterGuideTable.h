@@ -26,9 +26,13 @@
 //  Created by Glenn Howes on 1/3/14.
 //  Copyright (c) 2014 Generally Helpful Software. All rights reserved.
 //
-
+#if defined(__has_feature) && __has_feature(modules)
+@import Foundation;
+#else
 #import <Foundation/Foundation.h>
+#endif
 #import "ATSCTables.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @class MasterGuideTable;
