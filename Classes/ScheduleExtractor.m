@@ -37,6 +37,7 @@
 #import "TunerChannel+TV.h"
 #import "SubchannelManager.h"
 #import "TunerStateManager.h"
+#import "StringConstants.h"
 #import "ATSCTables.h"
 #import "MasterGuideTable.h"
 #import "SystemTimeTable.h"
@@ -90,123 +91,150 @@ const unsigned char kExtractor[] = "kExtractor";
     }
 }
 
-+(void) startWholeScanWithCallback:(extraction_result_t)callback
++(ScheduleExtractor*) getExtractorForTuner:(NSObject<TVTuner>*) aTuner
 {
+    ScheduleExtractor* result =  objc_getAssociatedObject(aTuner, kExtractor);
+    if(result == nil)
+    {
+        result = [ScheduleExtractor new];
+        result.backgroundManager = [[SubchannelManager sharedModel] newChildModel];
+        result.tuner = aTuner;
+        objc_setAssociatedObject(aTuner, kExtractor, result, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        
+    }
+    return result;
+}
+
++(void) scanSubChannels:(NSArray<NSManagedObjectID*> *)favoriteSubchannels withCallback:(extraction_result_t)callback
+{
+    __block NSMutableArray* channelsToScan = [favoriteSubchannels mutableCopy];
+    
     __block SubchannelManager* backgroundManager = [[SubchannelManager sharedModel] newBackgroundChildModel];
     
-    [[SubchannelManager sharedModel] retrieveFavoriteChannelsIDs:^(NSArray *favoriteChannels, NSError *error) {
-        __block NSMutableArray* channelsToScan = [favoriteChannels mutableCopy];
-        
-        
-        RetrieveTunersForScheduling(^(NSArray *scheduableWrappers) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:kScheduleParserBeginScan object:self userInfo:nil];
-            if(scheduableWrappers.count)
-            {
-                __block NSInteger wrapperCount = scheduableWrappers.count;
-                __block NSMutableArray* extractors = [[NSMutableArray alloc] initWithCapacity:scheduableWrappers.count];
+    RetrieveTunersForScheduling(^(NSArray *scheduableWrappers) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kScheduleParserBeginScan object:self userInfo:nil];
+        if(scheduableWrappers.count)
+        {
+            __block NSInteger wrapperCount = scheduableWrappers.count;
+            __block NSMutableArray* extractors = [[NSMutableArray alloc] initWithCapacity:scheduableWrappers.count];
+            
+            __block UIBackgroundTaskIdentifier backgroundTaskID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
                 
-                __block UIBackgroundTaskIdentifier backgroundTaskID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
-                    
-                    [channelsToScan removeAllObjects];
-                }];
-                __block NSInteger outStanding = 0;
+                [channelsToScan removeAllObjects];
+            }];
+            __block NSInteger outStanding = 0;
+            
+            [self askTuners:scheduableWrappers forStatusResult:^(NSDictionary *transaction, NSObject<TVTuner> *aTuner) {
                 
-                [self askTuners:scheduableWrappers forStatusResult:^(NSDictionary *transaction, NSObject<TVTuner> *aTuner) {
-                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                        wrapperCount--;
-                        
-                        if(!CheckForErrorInTransaction(transaction))
-                        {
-                            NSString*	targetIPAddressString = [transaction objectForKey:kTargetIPAddressTag];
-                            if(targetIPAddressString.length == 0)
-                            {
-                                if(channelsToScan.count)
-                                {
-                                    
-                                    ScheduleExtractor* anExtractor =  objc_getAssociatedObject(aTuner, kExtractor);
-                                    if(anExtractor == nil)
-                                    {
-                                        anExtractor = [ScheduleExtractor new];
-                                        anExtractor.backgroundManager = backgroundManager;
-                                        anExtractor.tuner = aTuner;
-                                        objc_setAssociatedObject(aTuner, kExtractor, anExtractor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-                                        
-                                    }
-                                    [extractors addObject:anExtractor];
-                                    NSManagedObjectID* anID = [channelsToScan lastObject];
-                                    [channelsToScan removeLastObject];
-                                    __weak ScheduleExtractor* weakExtractor = anExtractor;
-                                    anExtractor.callback = ^(BOOL success){
-                                        outStanding--;
-                                        if(!success)
-                                        {
-                                            NSLog(@"Missed one: %@", weakExtractor.activeChannelID.description);
-                                        }
-                                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                            if(channelsToScan.count)
-                                            {
-                                                outStanding++;
-                                                NSManagedObjectID* anID = [channelsToScan lastObject];
-                                                [channelsToScan removeLastObject];
-                                                [weakExtractor startToScanAChannelID:anID withCallback:weakExtractor.callback];
-                                            }
-                                            else
-                                            {
-                                                weakExtractor.callback = nil;
-                                                
-                                                if(outStanding == 0)
-                                                {
-                                                    [[NSNotificationCenter defaultCenter] postNotificationName:kScheduleParserCompletedScan object:weakExtractor userInfo:nil];
-                                                    
-                                                    if(callback)
-                                                    {
-                                                        callback(YES);
-                                                    }
-                                                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                                        
-                                                        [[UIApplication sharedApplication] endBackgroundTask:backgroundTaskID];
-                                                        backgroundTaskID = UIBackgroundTaskInvalid;
-                                                    }];
-                                                }
-                                            }
-                                        }];
-                                    };
-                                    outStanding++;
-                                    [anExtractor startToScanAChannelID:anID  withCallback:anExtractor.callback];                            }
-                            }
-                        }
-                        else if(wrapperCount == 0 && extractors.count == 0)
-                        {
-                            [[NSNotificationCenter defaultCenter] postNotificationName:kScheduleScanFailedNoAvailableTuners object:self];
-                            if(callback)
-                            {
-                                callback(NO);
-                            }
-                            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                
-                                [[UIApplication sharedApplication] endBackgroundTask:backgroundTaskID];
-                                backgroundTaskID = UIBackgroundTaskInvalid;
-                            }];
-                        }
-                        
-                        
-                    }];
-                }];
-            }
-            else
-            {
+                NSNumber* frequency = [transaction objectForKey:kTunerFrequencyTag];
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kScheduleScanFailedNoAvailableTuners object:self];
-                    if(callback)
+                    wrapperCount--;
+                    
+                    if(!CheckForErrorInTransaction(transaction))
                     {
-                        callback(NO);
+                        NSString*	targetIPAddressString = [transaction objectForKey:kTargetIPAddressTag];
+                        if(targetIPAddressString.length == 0)
+                        {
+                            if(channelsToScan.count)
+                            {
+                                ScheduleExtractor* anExtractor =  [self getExtractorForTuner:aTuner];
+                                anExtractor.backgroundManager = backgroundManager;
+                                
+                                [extractors addObject:anExtractor];
+                                NSManagedObjectID* anID = [channelsToScan lastObject];
+                                [channelsToScan removeLastObject];
+                                __weak ScheduleExtractor* weakExtractor = anExtractor;
+                                anExtractor.callback = ^(BOOL success){
+                                    outStanding--;
+                                    if(!success)
+                                    {
+                                        NSLog(@"Missed one: %@", weakExtractor.activeChannelID.description);
+                                    }
+                                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                                        ScheduleExtractor* strongExtractor = weakExtractor;
+                                        if(channelsToScan.count)
+                                        {
+                                            outStanding++;
+                                            NSManagedObjectID* anID = [channelsToScan lastObject];
+                                            [channelsToScan removeLastObject];
+                                            [strongExtractor startToScanAChannelID:anID withCallback:strongExtractor.callback];
+                                        }
+                                        else
+                                        {
+                                            strongExtractor.callback = nil;
+                                            if(frequency.integerValue > 0 )
+                                            {
+                                                [aTuner startTuningToFrequency:frequency forTransaction:transaction withCallback:^(NSDictionary * setFrequencyTransaction) {
+                                                    
+                                                }];
+                                            }
+                                            if(outStanding == 0)
+                                            {
+                                                [[NSNotificationCenter defaultCenter] postNotificationName:kScheduleParserCompletedScan object:strongExtractor userInfo:nil];
+                                                
+                                                if(callback)
+                                                {
+                                                    callback(YES);
+                                                }
+                                                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                                                    
+                                                    [[UIApplication sharedApplication] endBackgroundTask:backgroundTaskID];
+                                                    backgroundTaskID = UIBackgroundTaskInvalid;
+                                                }];
+                                            }
+                                        }
+                                    }];
+                                };
+                                outStanding++;
+                                [anExtractor startToScanAChannelID:anID  withCallback:anExtractor.callback];                            }
+                        }
+                    }
+                    else if(wrapperCount == 0 && extractors.count == 0)
+                    {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:kScheduleScanFailedNoAvailableTuners object:self];
+                        if(callback)
+                        {
+                            callback(NO);
+                        }
+                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                            
+                            [[UIApplication sharedApplication] endBackgroundTask:backgroundTaskID];
+                            backgroundTaskID = UIBackgroundTaskInvalid;
+                        }];
                     }
                     
+                    
                 }];
-            }
-            
+            }];
         }
-        );
+        else
+        {
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:kScheduleScanFailedNoAvailableTuners object:self];
+                if(callback)
+                {
+                    callback(NO);
+                }
+                
+            }];
+        }
+        
+    });
+
+}
+
++(void) startWholeScanWithCallback:(extraction_result_t)callback
+{
+    [[SubchannelManager sharedModel] retrieveFavoriteSubChannelsIDs:^(NSArray<NSManagedObjectID*>*favoriteSubchannels, NSError *error) {
+        
+        if(error != nil)
+        {
+            callback(false);
+        }
+        else
+        {
+            [self scanSubChannels:favoriteSubchannels withCallback:callback];
+        }
     }];
 }
 
@@ -251,9 +279,19 @@ const unsigned char kExtractor[] = "kExtractor";
 
 -(void) setPollingCallback:(dispatch_block_t)callback
 {
+    dispatch_source_t timer = self.tuner.pollingSource;
+    if(timer == nil)
+    {
+        timer = self.timer;
+    }
+    else
+    {
+        dispatch_suspend(timer);
+        self.validData = 0;
+    }
     pollingCallback = callback;
-    dispatch_source_set_event_handler([self timer], callback);
-    dispatch_resume([self timer]);
+    dispatch_source_set_event_handler(timer, callback);
+    dispatch_resume(timer);
     
 }
 
@@ -584,6 +622,46 @@ const unsigned char kExtractor[] = "kExtractor";
     }];
 }
 
+
+-(void) scanChannel:(TunerChannel *) tunerChannel withTransaction:(NSDictionary*)transaction withCallback:(extraction_result_t)callback
+{
+    if(self.activeChannelID == nil)
+    {
+        TunerSubchannel* subChannel = (TunerSubchannel*) tunerChannel.subchannels.allObjects.firstObject;
+        self.activeChannelID = subChannel.objectID;
+        
+    }
+    
+    
+    NSString* pidFiter = @"0x1ffb"; // magic number that filters out audio, video and anything not related to schedule data
+    [self.tuner startSettingPIDFilter:pidFiter forTransaction:transaction withCallback:^(NSDictionary *setFilterTransaction) {
+        if(!CheckForErrorInTransaction(setFilterTransaction))
+        {
+            [self.tuner startStreamingWithTransaction:setFilterTransaction withCallback:^(NSDictionary *startStreamingTransaction)
+             {
+                 if(!CheckForErrorInTransaction(startStreamingTransaction))
+                 {
+                     [self.tuner addOperationWithBlock:^{
+                         
+                         [self pollForMasterTable:startStreamingTransaction withCallback:callback];
+                     }];
+                 }
+                 else
+                 {
+                     [[NSNotificationCenter defaultCenter] postNotificationName:kScheduleExtractorError object:self userInfo:setFilterTransaction];
+                     callback(NO);
+                 }
+             }];
+        }
+        else
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kScheduleExtractorError object:self userInfo:setFilterTransaction];
+            callback(NO);
+        }
+    }];
+
+}
+
 -(void) startToScanAChannelID:(NSManagedObjectID*)channelID withCallback:(extraction_result_t)callback
 {
     self.activeChannelID = channelID;
@@ -594,38 +672,20 @@ const unsigned char kExtractor[] = "kExtractor";
         {
             NSDictionary* startTransaction = @{kScheduleTunerChannelTag:self.activeChannelID};
             NSNumber* frequency = tunerChannel.frequency;
+            self.tuner.scanningSchedule = YES;
             [self.tuner startTuningToFrequency:frequency forTransaction:startTransaction withCallback:^(NSDictionary * setFrequencyTransaction) {
                 if(!CheckForErrorInTransaction(setFrequencyTransaction))
                 {
-                    NSString* pidFiter = @"0x1ffb";
-                    [self.tuner startSettingPIDFilter:pidFiter forTransaction:setFrequencyTransaction withCallback:^(NSDictionary *setFilterTransaction) {
-                        if(!CheckForErrorInTransaction(setFilterTransaction))
-                        {
-                            [self.tuner startStreamingWithTransaction:setFilterTransaction withCallback:^(NSDictionary *startStreamingTransaction)
-                            {
-                                if(!CheckForErrorInTransaction(startStreamingTransaction))
-                                {
-                                    [self.tuner addOperationWithBlock:^{
-                                        
-                                        [self pollForMasterTable:startStreamingTransaction withCallback:callback];
-                                    }];
-                                }
-                                else
-                                {
-                                    [[NSNotificationCenter defaultCenter] postNotificationName:kScheduleExtractorError object:self userInfo:setFilterTransaction];
-                                    callback(NO);
-                                }
-                            }];
-                        }
-                        else
-                        {
-                            [[NSNotificationCenter defaultCenter] postNotificationName:kScheduleExtractorError object:self userInfo:setFilterTransaction];
-                            callback(NO);
-                        }
+                    [self scanChannel:tunerChannel withTransaction:setFrequencyTransaction withCallback:^(BOOL success) {
+                     
+                        
+                        self.tuner.scanningSchedule = NO;
+                        callback(success);
                     }];
                 }
                 else
                 {
+                    self.tuner.scanningSchedule = NO;
                     [[NSNotificationCenter defaultCenter] postNotificationName:kScheduleExtractorError object:self userInfo:setFrequencyTransaction];
                     callback(NO);
                 }

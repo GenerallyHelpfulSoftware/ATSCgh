@@ -29,6 +29,8 @@
 +(NSDate*) endDateFromEventRecord:(EventInformationRecord*)eventRecord withTimeOffest:(NSTimeInterval)timeOffset;
 +(NSDate*) startDateFromEventRecord:(EventInformationRecord*)eventRecord withTimeOffest:(NSTimeInterval)timeOffset;
 
+-(BOOL) bridgesDate:(NSDate*)testDate;
+
 -(void) updateFromEventRecord:(EventInformationRecord*)eventRecord withTimeOffest:(NSTimeInterval)timeOffset;
 -(void) updateFromExtendedTextTable:(ExtendedTextTable*)extendedText;
 

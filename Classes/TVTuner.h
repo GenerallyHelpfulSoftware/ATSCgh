@@ -43,11 +43,12 @@ typedef void (^transaction_callback_t)(NSDictionary*);
 typedef void (^simple_callback_t)();
 
 
-typedef void(^statusTransactionResult_t)(NSDictionary* transaction, NSObject<TVTuner>* aTuner);
-typedef void(^retrieveTunersorScheduels_t)(NSArray* wrappers);
+typedef void(^statusTransactionResult_t)(NSDictionary* transaction, NSObject<TVTuner>* _Nullable aTuner);
+typedef void(^retrieveTunersForScheduels_t)( NSArray* _Nullable  wrappers);
 
 @protocol TVTuner <NSObject>
 @property(nonatomic, readonly) BOOL canReceiveData;
+@property(atomic, assign, getter=isScanningSchedule)       BOOL scanningSchedule;
 @property (nonatomic, assign) dispatch_source_t      __nullable        pollingSource;
 -(nullable const uint8_t*) retrieveDataOfMaximumSize:(size_t) availableSize  returningSizeRetrieved:(size_t*)sizeRetrieved;
 -(void) startSettingPIDFilter:(NSString*)pidFilters forTransaction:(NSDictionary*)transaction withCallback:(transaction_callback_t)callback;
@@ -61,7 +62,7 @@ typedef void(^retrieveTunersorScheduels_t)(NSArray* wrappers);
 @end
 
 
-void RetrieveTunersForScheduling(retrieveTunersorScheduels_t callback);
+void RetrieveTunersForScheduling(retrieveTunersForScheduels_t callback);
 BOOL CheckForErrorInTransaction(NSDictionary* transationToCheck);
 
 NS_ASSUME_NONNULL_END

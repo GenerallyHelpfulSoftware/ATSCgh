@@ -122,22 +122,22 @@
         {
             if(intMinutes == 0)
             {
-                result = NSLocalizedString(@"Starting Now.", @"");
+                result = NSLocalizedString(@"Starting Now", @"");
             }
             else if(intMinutes == 1)
             {
-                result = NSLocalizedString(@"Starts in a minutes.", @"");
+                result = NSLocalizedString(@"Starts in a minute", @"");
             }
             else if(intMinutes < 60)
             {
-                NSString* formatString = NSLocalizedString(@"Starts in %d minutes.", @"");
+                NSString* formatString = NSLocalizedString(@"Starts in %d minutes", @"");
                 result = [NSString stringWithFormat:formatString, intMinutes];
             }
             else
             {
                 NSString* endDateString = [[self timeFormatter] stringFromDate:startTime];
                 
-                NSString* formatString = NSLocalizedString(@"Starts %@.", @"");
+                NSString* formatString = NSLocalizedString(@"Starts %@", @"");
                 result = [NSString stringWithFormat:formatString, endDateString];
             }
         }
@@ -146,22 +146,22 @@
             int deltaMinutes = abs((int)intMinutes);
             if(deltaMinutes == 0)
             {
-                result = NSLocalizedString(@"Just Started.", @"");
+                result = NSLocalizedString(@"Just Started", @"");
             }
             else if(deltaMinutes == 1)
             {
-                result = NSLocalizedString(@"Started a minute ago.", @"");
+                result = NSLocalizedString(@"Started a minute ago", @"");
             }
             else if(deltaMinutes < 60)
             {
-                NSString* formatString = NSLocalizedString(@"Started %d minutes ago.", @"");
+                NSString* formatString = NSLocalizedString(@"Started %d minutes ago", @"");
                 result = [NSString stringWithFormat:formatString, deltaMinutes];
             }
             else
             {
                 NSString* endDateString = [[self timeFormatter] stringFromDate:startTime];
                 
-                NSString* formatString = NSLocalizedString(@"Started %@.", @"");
+                NSString* formatString = NSLocalizedString(@"Started %@", @"");
                 result = [NSString stringWithFormat:formatString, endDateString];
             }
         }
@@ -174,15 +174,29 @@
     return result;
 }
 
+-(BOOL) bridgesDate:(NSDate*)testDate
+{
+    BOOL result = NO;
+    
+    if([self.end_time compare:testDate] != NSOrderedAscending)
+    {
+        if(self.start_time != nil && [self.start_time compare: testDate] != NSOrderedDescending)
+        {
+            result = YES;
+        }
+    }
+    
+    return result;
+}
+
 -(NSString*) endTimeString
 {
     __block NSString* result = nil;
     [self.managedObjectContext performBlockAndWait:^{
         NSDate* now = [NSDate date];
-        NSDate* startTime = self.start_time;
         NSDate* endTime = self.end_time;
         
-        if([startTime compare:now] != NSOrderedDescending && [endTime compare:now] != NSOrderedAscending)
+        if([self bridgesDate:now])
         {
             NSTimeInterval seconds = [endTime timeIntervalSinceNow];
             NSTimeInterval minutes = rint(seconds/60);
@@ -204,7 +218,7 @@
             }
             else
             {
-                NSString* formatString = NSLocalizedString(@"Ends in %d minutes.", @"");
+                NSString* formatString = NSLocalizedString(@"Ends in %d minutes", @"");
                 result = [NSString stringWithFormat:formatString, intMinutes];
             }
         }
@@ -212,14 +226,14 @@
         {
             NSString* endDateString = [[self timeFormatter] stringFromDate:endTime];
             
-            NSString* formatString = NSLocalizedString(@"Ended %@.", @"");
+            NSString* formatString = NSLocalizedString(@"Ended %@", @"");
             result = [NSString stringWithFormat:formatString, endDateString];
         }
         else
         {
             NSString* endDateString = [[self timeFormatter] stringFromDate:endTime];
             
-            NSString* formatString = NSLocalizedString(@"Ends %@.", @"");
+            NSString* formatString = NSLocalizedString(@"Ends %@", @"");
             result = [NSString stringWithFormat:formatString, endDateString];
         }
         

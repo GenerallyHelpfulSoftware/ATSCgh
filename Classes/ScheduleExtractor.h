@@ -40,7 +40,7 @@
 @protocol TVTuner;
 
 @class ScheduleExtractor;
-
+@class TunerChannel;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -49,8 +49,13 @@ typedef void(^extraction_result_t)(BOOL success);
 @interface ScheduleExtractor : NSObject
 @property(nonatomic, strong) NSObject<TVTuner>* tuner;
 +(void) startWholeScanWithCallback:(extraction_result_t)callback;
++(void) scanSubChannels:(NSArray<NSManagedObjectID*> *)subChannels withCallback:(extraction_result_t)callback;
++(ScheduleExtractor*) getExtractorForTuner:(NSObject<TVTuner>*) aTuner;
+
 
 -(void) startToScanAChannelID:(NSManagedObjectID*)aChannelID withCallback:(extraction_result_t)callback; // NSManagedObjectID for TunerChannel
+
+-(void) scanChannel:(TunerChannel *) tunerChannel withTransaction:(NSDictionary*)transaction withCallback:(extraction_result_t)callback;
 -(void) cancel;
 
 @end

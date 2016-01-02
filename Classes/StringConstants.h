@@ -42,6 +42,7 @@ extern NSString* const kShowChannelInList; // NSNumber (BOOL)
 extern NSString* const kChannelMapStandardTag;
 extern NSString* const kProgramsArrayTag; // NSArray of NSDictionaries
 extern NSString* const kProgramNameTag;	// NSString
+extern NSString* const kProgramNumberTag; // NSNumber
 extern NSString* const kProgramVirtualMajorChannelTag; // NSNumber (integer) like the 25 in 25.1
 extern NSString* const kProgramVirtualMinorChannelTag; // NSNumber (integer) like the 1 in 25.1
 

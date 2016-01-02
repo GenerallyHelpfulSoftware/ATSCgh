@@ -3,7 +3,7 @@
 //  Signal GH
 //
 //  Created by Glenn Howes on 12/28/13.
-//  Copyright (c) 2013 Generally Helpful Software. All rights reserved.
+//  Copyright (c) 2013-2015 Generally Helpful Software. All rights reserved.
 //
 
 #import "TunerSubchannel+TV.h"
@@ -18,6 +18,7 @@
 #import "SystemTimeTable.h"
 #import "TunerChannel+TV.h"
 #import "Tower.h"
+
 @implementation TunerSubchannel (TV)
 
 -(Tower*)tower
@@ -190,7 +191,6 @@
         }
         else
         {
-            
             NSTimeZone* myTimeZone = [NSTimeZone defaultTimeZone];
             timeOffset = [myTimeZone secondsFromGMT];
         }
@@ -277,7 +277,6 @@
                         }
                         else
                         {
-                            
                             eventTableIndex++;
                             
                             NSDate* oldStartTimeNearestMinute = [aShow start_time];
@@ -289,7 +288,6 @@
                                 
                                 [eventsToAdd addObject:aRecord];
                             }
-                            
                             break;
                         }
                     }
@@ -298,7 +296,6 @@
                 {
                     break;
                 }
-                
             }
         }
         for(ScheduledShow* aShow in showsToRemove)
@@ -352,12 +349,10 @@
                     {
                         NSInteger event_id = aShow.event_id.integerValue;
                         
+                        if(textTable.event_id == event_id)
                         {
-                            if(textTable.event_id == event_id)
-                            {
-                                [aShow updateFromExtendedTextTable:textTable];
-                                break;
-                            }
+                            [aShow updateFromExtendedTextTable:textTable];
+                            break;
                         }
                     }
                 }

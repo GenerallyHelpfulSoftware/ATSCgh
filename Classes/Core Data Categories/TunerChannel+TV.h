@@ -8,13 +8,20 @@
 
 #import "TunerChannel.h"
 #import "TVBroadcaster.h"
-
+NS_ASSUME_NONNULL_BEGIN
 @class Network;
 
 @interface TunerChannel (TV)
-@property(nonatomic, readonly) Network* network;
-@property(nonatomic, readonly) Tower* tower;
-@property(nonatomic, readonly) NSString* trimmedCallsign;
+@property(nonatomic, readonly)  Network* _Nullable   network;
+@property(nonatomic, readonly) Tower* _Nullable tower;
+@property(nonatomic, readonly) NSString* _Nullable trimmedCallsign;
 -(void) extractATSCTables:(NSDictionary*)newATSCTables; // call on managed context queue
 -(void) configureFromStandardDescription:(NSDictionary*)description;
+
+-(nullable TunerSubchannel*) subChannelWithMinor:(NSInteger)minorChannel;
+
+-(nullable Network*) networkForSubChannel:(NSInteger)subChannel;
+
+
 @end
+NS_ASSUME_NONNULL_END

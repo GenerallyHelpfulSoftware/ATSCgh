@@ -36,6 +36,7 @@ NSString* const kChannelMapStandardTag = @"Channel Standard";
 
 NSString* const kProgramsArrayTag		= @"Subchannel Records"; // NSArray of NSDictionaries
 NSString* const     kProgramNameTag		= @"Subchannel Name";	// NSString
+NSString* const     kProgramNumberTag   = @"Program";
 NSString* const     kProgramVirtualMajorChannelTag	= @"Subchannel Major Virtual Channel"; // NSNumber (integer) like the 25 in 25.1
 NSString* const     kProgramVirtualMinorChannelTag	= @"Subchannel Minor Virtual Channel"; // NSNumber (integer) like the 1 in 25.1
 

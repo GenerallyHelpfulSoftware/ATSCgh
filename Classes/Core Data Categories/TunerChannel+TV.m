@@ -57,6 +57,10 @@
             {
                 callSign = [callSign stringByReplacingOccurrencesOfString:@"-SD" withString:@"-TV"];
             }
+            else if([callSign hasSuffix:@"-DT"])
+            {
+                callSign = [callSign stringByReplacingOccurrencesOfString:@"-DT" withString:@"-TV"];
+            }
             else if(![callSign hasSuffix:@"-TV"])
             {
                 NSRange rangeOfDash = [callSign rangeOfString:@"-"];
@@ -92,6 +96,48 @@
             result = networks.anyObject;
             
         }
+    }];
+    return result;
+}
+
+-(nullable Network*) networkForSubChannel:(NSInteger)minorChannelNumber
+{
+    __block Network* result = nil;
+    [self.managedObjectContext performBlockAndWait:^{
+        for(TunerSubchannel* subChannel in self.subchannels)
+        {
+            if(subChannel.virtualMinorChannelNumber.integerValue == minorChannelNumber)
+            {
+                result = subChannel.network;
+                break;
+            }
+        }
+    }];
+    return result;
+}
+
+-(nullable TunerSubchannel*) subChannelWithMinor:(NSInteger)minorChannelNumber
+{
+    __block TunerSubchannel* result = nil;
+    [self.managedObjectContext performBlockAndWait:^{
+        TunerSubchannel* lowestSubChannel = nil;
+        for(TunerSubchannel* subChannel in self.subchannels)
+        {
+            if(subChannel.virtualMinorChannelNumber.integerValue == minorChannelNumber)
+            {
+                result = subChannel;
+                break;
+            }
+            else if(lowestSubChannel == nil || lowestSubChannel.virtualMinorChannelNumber > subChannel.virtualMinorChannelNumber)
+            {
+                lowestSubChannel = subChannel;
+            }
+        }
+        if (result == nil  && minorChannelNumber == 0)
+        {
+            result = lowestSubChannel;
+        }
+        
     }];
     return result;
 }

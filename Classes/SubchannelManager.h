@@ -49,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void (^channel_retrieval_t)(TunerChannel* __nullable tunerChannel, NSError* __nullable error);
 typedef void (^subchannel_retrieval_t)(TunerSubchannel* __nullable tunerChannel, NSError* __nullable error);
 
-typedef void(^channelIDs_retrieval_t)(NSArray<NSManagedObjectID*> * __nullable favoriteChannels, NSError* __nullable  error);
+typedef void(^channelIDs_retrieval_t)(NSArray<NSManagedObjectID*> * __nullable favoriteSubchannels, NSError* __nullable  error);
 
 typedef void(^scheduledShow_retrieval_t)(ScheduledShow* __nullable aShow, NSError* __nullable error);
 typedef void(^cleanOldShows_t)();
@@ -59,6 +59,7 @@ typedef void(^cleanOldShows_t)();
 @property (nonatomic, readonly) NSManagedObjectContext*			managedObjectContext;
 @property (nonatomic, readonly) NSPersistentStoreCoordinator*	persistentStoreCoordinator;
 @property (nonatomic, assign) BOOL                              needToReinit;
+@property (nonatomic, assign) BOOL                              saveSchedulesForAllSubChannels;
 
 
 +(SubchannelManager*) sharedModel;
@@ -71,7 +72,11 @@ typedef void(^cleanOldShows_t)();
 -(void) syncRetrieveScheduledShowWithID:(NSManagedObjectID*)objectID intoCallback:(scheduledShow_retrieval_t)callback;
 -(void) retrieveChannelAtFrequency:(NSNumber*)frequency inStandard:(NSString*)standards intoCallback:(channel_retrieval_t)callback;
 
--(void) retrieveFavoriteChannelsIDs:(channelIDs_retrieval_t)callback;
+
+-(nullable TunerChannel* ) retrieveChannelAtFrequency:(NSNumber*)frequency inStandard:(NSString*)standard;
+
+
+-(void) retrieveFavoriteSubChannelsIDs:(channelIDs_retrieval_t)callback;
 
 -(void) saveOutTables:(NSDictionary*)extractedTables definedByMasterGuideTable:(MasterGuideTable*)masterTable andTerrestrialChannels:(TerrestrialVirtualChannelTable*)terrestrialTable forTunerChannelWithID:(NSManagedObjectID*)tunerChannelID;
 
@@ -82,6 +87,8 @@ typedef void(^cleanOldShows_t)();
 -(NSFetchedResultsController*) newSubChannelsFetchResultsControllerForFromStandard:(NSString*)standardString;
 -(NSFetchedResultsController*) newSheduledShowsSortTimeResultsController;
 -(NSFetchedResultsController*) newSheduledShowsSortChannelsResultsController;
+
+-(NSFetchedResultsController*) newScheduledShowsResultsControllerForTunerChannel:(TunerChannel*)aChannel;
 
 -(NSFetchedResultsController*) newChannelsFetchResultsControllerForStandards:(NSArray<NSString*>*)standards;
 -(NSFetchedResultsController*) newSeenChannelsFetchResultsControllerForStandards:(NSArray<NSString*>*)standards;
