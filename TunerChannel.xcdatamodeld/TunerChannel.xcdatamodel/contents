@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5063" systemVersion="13C64" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11542" systemVersion="16B2555" minimumToolsVersion="Xcode 4.3" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="ContentAdvisory" representedClassName="ContentAdvisory" syncable="YES">
-        <attribute name="rating_region" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="rating_region" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="eventRatings" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="EventRating" inverseName="advisory" inverseEntity="EventRating" syncable="YES"/>
         <relationship name="ratingDescriptions" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="RatingDescription" inverseName="advisory" inverseEntity="RatingDescription" syncable="YES"/>
         <relationship name="show" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ScheduledShow" inverseName="contentAdvisories" inverseEntity="ScheduledShow" syncable="YES"/>
     </entity>
     <entity name="EventRating" representedClassName="EventRating" syncable="YES">
-        <attribute name="ratingIndex" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="ratingValue" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="ratingIndex" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="ratingValue" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="advisory" maxCount="1" deletionRule="Nullify" destinationEntity="ContentAdvisory" inverseName="eventRatings" inverseEntity="ContentAdvisory" syncable="YES"/>
     </entity>
     <entity name="LocalizedString" representedClassName="LocalizedString" isAbstract="YES" syncable="YES">
@@ -16,8 +16,8 @@
         <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Rating" representedClassName="Rating" syncable="YES">
-        <attribute name="index" attributeType="Integer 16" minValueString="0" defaultValueString="0" syncable="YES"/>
-        <attribute name="isGraduated" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="index" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="isGraduated" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="channel" maxCount="1" deletionRule="Nullify" destinationEntity="TunerChannel" inverseName="ratings" inverseEntity="TunerChannel" syncable="YES"/>
         <relationship name="titles" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RatingTitle" inverseName="rating" inverseEntity="RatingTitle" syncable="YES"/>
     </entity>
@@ -29,11 +29,11 @@
     </entity>
     <entity name="ScheduledShow" representedClassName="ScheduledShow" syncable="YES">
         <attribute name="calendarID" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="end_time" attributeType="Date" syncable="YES"/>
-        <attribute name="event_id" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES"/>
-        <attribute name="eventBlock" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="start_time" attributeType="Date" indexed="YES" syncable="YES"/>
-        <attribute name="version" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="end_time" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="event_id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" indexed="YES" syncable="YES"/>
+        <attribute name="eventBlock" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="start_time" attributeType="Date" usesScalarValueType="NO" indexed="YES" syncable="YES"/>
+        <attribute name="version" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="contentAdvisories" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ContentAdvisory" inverseName="show" inverseEntity="ContentAdvisory" syncable="YES"/>
         <relationship name="descriptions" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ShowDescription" inverseName="show" inverseEntity="ShowDescription" syncable="YES"/>
         <relationship name="subChannel" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TunerSubchannel" inverseName="shows" inverseEntity="TunerSubchannel" syncable="YES"/>
@@ -47,20 +47,20 @@
     </entity>
     <entity name="TunerChannel" representedClassName="TunerChannel" syncable="YES">
         <attribute name="callsign" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="frequency" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
-        <attribute name="number" attributeType="Integer 16" minValueString="0" syncable="YES"/>
+        <attribute name="frequency" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="number" attributeType="Integer 16" minValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="standardsTable" attributeType="String" minValueString="8" defaultValueString="us-bcast" indexed="YES" syncable="YES"/>
-        <attribute name="utcOffset" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
-        <attribute name="virtualMajorChannelNumber" optional="YES" attributeType="Integer 16" syncable="YES"/>
+        <attribute name="utcOffset" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="virtualMajorChannelNumber" optional="YES" attributeType="Integer 16" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="ratings" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Rating" inverseName="channel" inverseEntity="Rating" syncable="YES"/>
         <relationship name="subchannels" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TunerSubchannel" inverseName="channel" inverseEntity="TunerSubchannel" syncable="YES"/>
     </entity>
     <entity name="TunerSubchannel" representedClassName="TunerSubchannel" syncable="YES">
-        <attribute name="favorite" attributeType="Boolean" defaultValueString="NO" indexed="YES" syncable="YES"/>
+        <attribute name="favorite" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" indexed="YES" syncable="YES"/>
         <attribute name="programName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userVisibleName" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
-        <attribute name="virtualMajorChannelNumber" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="virtualMinorChannelNumber" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="virtualMajorChannelNumber" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="virtualMinorChannelNumber" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="channel" maxCount="1" deletionRule="Nullify" destinationEntity="TunerChannel" inverseName="subchannels" inverseEntity="TunerChannel" syncable="YES"/>
         <relationship name="shows" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ScheduledShow" inverseName="subChannel" inverseEntity="ScheduledShow" syncable="YES"/>
     </entity>

@@ -32,7 +32,7 @@
 
 @implementation LanguageString
 
-+(NSString*) bestMatchFromSet:(NSSet*)setOfLanguageStrings
++(nullable NSString*) bestMatchFromSet:(NSSet*)setOfLanguageStrings
 {
     NSString* result = nil;
     if(setOfLanguageStrings.count)

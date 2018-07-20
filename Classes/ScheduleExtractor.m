@@ -34,7 +34,6 @@
  */
 
 #import "ScheduleExtractor.h"
-#import "TunerChannel+TV.h"
 #import "SubchannelManager.h"
 #import "TunerStateManager.h"
 #import "StringConstants.h"
@@ -46,6 +45,7 @@
 #import "EventInformationTable.h"
 #import "ExtendedTextTable.h"
 #import <objc/runtime.h>
+#import "SignalGH-Swift.h"
 
 NSString* const kScheduleExtractorError = @"kScheduleExtractorError";
 NSString* const kScheduleParserFinishedParsingChannel = @"kScheduleParserFinishedParsingChannel";

@@ -7,7 +7,7 @@
 //
 
 #import "Data Model Objects.h"
-#import "ScheduledShow.h"
+#import "ScheduledShow+CoreDataProperties.h"
 
 
 @implementation Data_Model_Objects

@@ -31,6 +31,8 @@
 #import "RatingRegionTable.h"
 #import "LanguageString.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface EventRatingRegion ()
 @property(nonatomic, assign) unsigned char rating_region;
 @property(nonatomic, strong) NSArray* rating_descriptions; // LanguageString
@@ -91,4 +93,6 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END
 

@@ -36,13 +36,11 @@
 #import <CoreData/CoreData.h>
 #endif
 
-
-#import "TunerChannel+TV.h"
-#import "TunerSubchannel+TV.h"
-
 @class MasterGuideTable;
 @class TerrestrialVirtualChannelTable;
-
+@class ScheduledShow;
+@class TunerSubchannel;
+@class TunerChannel;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -71,7 +69,7 @@ typedef void(^cleanOldShows_t)();
 -(void) retrieveScheduledShowWithID:(NSManagedObjectID*)objectID intoCallback:(scheduledShow_retrieval_t)callback;
 -(void) syncRetrieveScheduledShowWithID:(NSManagedObjectID*)objectID intoCallback:(scheduledShow_retrieval_t)callback;
 -(void) retrieveChannelAtFrequency:(NSNumber*)frequency inStandard:(NSString*)standards intoCallback:(channel_retrieval_t)callback;
-
+-(void) populateTunerChannelsForStandards:(NSArray*)standards;
 
 -(nullable TunerChannel* ) retrieveChannelAtFrequency:(NSNumber*)frequency inStandard:(NSString*)standard;
 

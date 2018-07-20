@@ -33,21 +33,20 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class LanguageString;
-@class EventRatingDimension;
 
-@interface EventRatingRegion : NSObject
+
+@interface EventRatingDimension : BaseDescriptor
+@property(nonatomic, readonly)  unsigned char rating_dimension;
+@property(nonatomic, readonly)  unsigned char rating_value;
+@end
+
+@interface EventRatingRegion : BaseDescriptor
 @property(nonatomic, readonly) unsigned char rating_region;
 @property(nonatomic, readonly) NSArray<LanguageString*>* rating_descriptions; // LanguageString
 @property(nonatomic, readonly) NSArray<EventRatingDimension*>* eventRatingDimensions; //EventRatingDimension
 @end
 
 
-
-@interface EventRatingDimension : NSObject
-@property(nonatomic, readonly)  unsigned char rating_dimension;
-@property(nonatomic, readonly)  unsigned char rating_value;
-
-@end
 
 
 

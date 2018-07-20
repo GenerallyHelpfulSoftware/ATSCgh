@@ -40,9 +40,9 @@
 #import "TerrestrialVirtualChannelTable.h"
 #import "EventInformationTable.h"
 #import "ExtendedTextTable.h"
-#import "ScheduledShow.h"
 #import "ChannelListWrapper.h"
 #import "StringConstants.h"
+#import "SignalGH-Swift.h"
 
 NSString* const kUpdatedScheduledShows = @"kUpdatedScheduledShows";
 NSString* const kFavoriteSubchannelsChanged = @"kFavoriteSubchannelsChanged";
@@ -101,7 +101,7 @@ NSString* const kFavoriteSubchannelsChanged = @"kFavoriteSubchannelsChanged";
 - (NSString *)applicationDocumentsDirectory
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
-    NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
+    NSString *basePath = paths.firstObject;
     return basePath;
 }
 
@@ -109,7 +109,7 @@ NSString* const kFavoriteSubchannelsChanged = @"kFavoriteSubchannelsChanged";
 {
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-    NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
+    NSString *basePath = paths.firstObject;
     return basePath;
 
 }
@@ -157,7 +157,7 @@ NSString* const kFavoriteSubchannelsChanged = @"kFavoriteSubchannelsChanged";
         TunerChannel* myChannel = (TunerChannel*)[self.managedObjectContext existingObjectWithID:tunerChannelID error:&error];
         if(error == nil)
         {
-            [myChannel extractATSCTables:extractedTables];
+            [myChannel extractWithAtscTables:extractedTables];
             
             for(TunerSubchannel* aSubChannel in myChannel.subchannels)
             {
@@ -168,7 +168,7 @@ NSString* const kFavoriteSubchannelsChanged = @"kFavoriteSubchannelsChanged";
                         if(aVirtualChannel.major_channel_number == aSubChannel.virtualMajorChannelNumber.intValue
                            && aVirtualChannel.minor_channel_number == aSubChannel.virtualMinorChannelNumber.intValue)
                         { // this terrestrial channel corresponds to my tuner channel
-                            [aSubChannel extractTables:extractedTables withVirtualChannel:aVirtualChannel];
+                            [aSubChannel extractWithTables:extractedTables withVirtualChannel:aVirtualChannel];
                         }
                     }
                 }
@@ -558,7 +558,7 @@ NSString* const kFavoriteSubchannelsChanged = @"kFavoriteSubchannelsChanged";
 -(NSFetchedResultsController*) newFavoriteFetchResultsControllerForFromStandard:(NSString*)standardString
 {
     NSFetchRequest* favoriteRequest = [self newFavoriteRequestWithStandard:standardString];
-    NSFetchedResultsController *result = [[NSFetchedResultsController alloc] initWithFetchRequest:favoriteRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"FavoriteSubchannels"];
+    NSFetchedResultsController *result = [[NSFetchedResultsController alloc] initWithFetchRequest:favoriteRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
     return result;
 }
 
@@ -568,7 +568,7 @@ NSString* const kFavoriteSubchannelsChanged = @"kFavoriteSubchannelsChanged";
     
 	NSPredicate*	thePredicate = [NSPredicate predicateWithFormat:@"channel.standardsTable == %@", standardString];
 	[subchannelsRequest setPredicate:thePredicate];
-    NSFetchedResultsController *result = [[NSFetchedResultsController alloc] initWithFetchRequest:subchannelsRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"Subchannels"];
+    NSFetchedResultsController *result = [[NSFetchedResultsController alloc] initWithFetchRequest:subchannelsRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
     return result;
 }
 
@@ -584,13 +584,13 @@ NSString* const kFavoriteSubchannelsChanged = @"kFavoriteSubchannelsChanged";
     
     NSArray* sortDescriptors = @[sortDescriptor2,sortDescriptor3, sortDescriptor4];
     
-    fetchRequest.sortDescriptors =sortDescriptors;
+    fetchRequest.sortDescriptors = sortDescriptors;
     
     
 	NSPredicate*	thePredicate = [NSPredicate predicateWithFormat:@"subChannel != nil && subChannel.favorite == YES"];
 	[fetchRequest setPredicate:thePredicate];
     
-    NSFetchedResultsController *result = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:@"subChannel.userVisibleName" cacheName:nil];
+    NSFetchedResultsController *result = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:@"subChannel.objectID" cacheName:nil];
     return result;
 }
 
@@ -713,7 +713,7 @@ NSString* const kFavoriteSubchannelsChanged = @"kFavoriteSubchannelsChanged";
             theChannel.callsign = callsign;
             
             NSMutableDictionary* subChannelsToAdd = [[NSMutableDictionary alloc] init];
-            NSSet* channelsStartChannels = theChannel.subchannels;
+            NSSet* channelsStartChannels = [theChannel.subchannels copy];
             
             
             for(NSDictionary* aSubChannelDescription in arrayOfPrograms)

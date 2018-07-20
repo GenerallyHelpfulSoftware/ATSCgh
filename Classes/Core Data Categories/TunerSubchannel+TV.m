@@ -9,15 +9,14 @@
 #import "TunerSubchannel+TV.h"
 #import "BroadcasterModel.h"
 #import "TunerChannel+TV.h"
-#import "Subchannel.h"
-#import "Network+Map.h"
 #import "TerrestrialVirtualChannelTable.h"
 #import "EventInformationTable.h"
 #import "ExtendedTextTable.h"
 #import "ScheduledShow+TV.h"
 #import "SystemTimeTable.h"
 #import "TunerChannel+TV.h"
-#import "Tower.h"
+#import "SignalGH-Swift.h"
+
 
 @implementation TunerSubchannel (TV)
 
@@ -128,7 +127,7 @@
         if(myTower != nil)
         {
             NSSet* subChannels = myTower.subchannels;
-            NSString* subChannelString = [self completedSubchannelNumber];
+            NSString* subChannelString = self.virtualMinorChannelNumber.stringValue;
             for(Subchannel* aSubchannel in subChannels)
             {
                 if([aSubchannel.virtualNumber isEqualToString:subChannelString])

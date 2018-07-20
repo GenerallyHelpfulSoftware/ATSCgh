@@ -44,7 +44,7 @@ typedef void (^parsingCallback_t)(NSUInteger endIndex, NSDictionary* __nullable 
 
 +(void) extractTablesFromData:(const unsigned char*)theData ofValidLength:(size_t)validLength withSetOfExtractors:(NSDictionary*)preexisting intoCallback:(parsingCallback_t)callback;
 -(instancetype) initWithPID:(NSNumber*)aPid;
--(nullable instancetype) init __attribute__((unavailable("init not available")));
+-(instancetype) init __attribute__((unavailable("init not available")));
 
 @end
 

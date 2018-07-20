@@ -29,6 +29,10 @@
 
 #import "ContentDescriptor.h"
 
+@implementation BaseDescriptor
+
+@end
+
 @implementation ContentDescriptor
 -(instancetype) initWithRawData:(const unsigned char*)streamData
 {

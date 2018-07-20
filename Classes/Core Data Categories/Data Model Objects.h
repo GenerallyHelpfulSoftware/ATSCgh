@@ -7,7 +7,7 @@
 //
 
 
-#import "LocalizedString.h"
+#import "LocalizedString+CoreDataProperties.h"
 
 @class ScheduledShow;
 

@@ -31,14 +31,14 @@
 #import "LanguageString.h"
 
 @interface RatingValue()
-@property(nonatomic, strong) NSArray* abbreviatedValues;
-@property(nonatomic, strong) NSArray* values;
+@property(nonatomic, strong, nullable) NSArray* abbreviatedValues;
+@property(nonatomic, strong, nullable) NSArray* values;
 @end
 
 @interface RatingDimension ()
-@property(nonatomic, strong) NSArray* names;
+@property(nonatomic, strong, nullable) NSArray* names;
 @property(nonatomic, assign) BOOL isGraduatedScale;
-@property(nonatomic, strong) NSArray* values; // RatingValue
+@property(nonatomic, strong, nullable) NSArray* values; // RatingValue
 @end
 
 

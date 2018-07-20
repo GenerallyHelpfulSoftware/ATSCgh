@@ -85,7 +85,7 @@ typedef struct
 @property(nonatomic, readonly) UInt16 sectionNumber;
 @property(nonatomic, readonly) UInt16 lastSectionNumber;
 -(instancetype)initWithTableHeader:(TableHeader)tableHeader packetHeader:(PacketHeader)packetHeader rawData:(const unsigned char*) streamData;
--(nullable instancetype) init __attribute__((unavailable("init not available")));
+-(instancetype) init __attribute__((unavailable("init not available")));
 -(NSString*) uniqueKey;
 @end
 

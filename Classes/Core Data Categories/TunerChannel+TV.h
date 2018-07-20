@@ -6,10 +6,13 @@
 //  Copyright (c) 2013 Generally Helpful Software. All rights reserved.
 //
 
-#import "TunerChannel.h"
-#import "TVBroadcaster.h"
+@import Foundation;
+
 NS_ASSUME_NONNULL_BEGIN
 @class Network;
+@class Tower;
+@class TunerSubchannel;
+@class TunerChannel;
 
 @interface TunerChannel (TV)
 @property(nonatomic, readonly)  Network* _Nullable   network;

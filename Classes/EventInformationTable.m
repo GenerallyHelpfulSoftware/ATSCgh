@@ -72,6 +72,18 @@
     NSString* result = [NSString stringWithFormat:@"Event Information Table Event ID:%d\nSource ID:%d\nStart Date:%@\nEnd Date:%@ \n Titles: \n %@ \n Descriptors: \n %@", self.event_id, self.source_id, startDateString, endDateString, self.titles.description, self.descriptors.description];
     return result;
 }
+
+-(NSArray<LanguageString*>*) titleArray
+{
+    if(self.titles != nil)
+    {
+        return self.titles;
+    }
+    else
+    {
+        return [NSArray new];
+    }
+}
 @end
 
 @implementation EventInformationTable

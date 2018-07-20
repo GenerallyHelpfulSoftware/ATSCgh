@@ -47,7 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, readonly) NSTimeInterval start_time; // seconds since January 6, 1980 (GPS Epoch)
 @property(nonatomic, readonly) ETMLocation extendedTextLocation;
 @property(nonatomic, readonly) NSTimeInterval length_in_seconds;
-@property(nonatomic, readonly) NSArray<LanguageString*>*  titles;
+@property(nonatomic, readonly,  nullable) NSArray<LanguageString*>*  titles;
 @property(nonatomic, readonly) NSArray<ContentDescriptor*>* descriptors;
 
 @end

@@ -39,9 +39,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, readonly) NSString* string;
 
 +(NSArray<LanguageString*>*)extractFromRawData:(const unsigned char*)streamData;
-+(NSString*) bestMatchFromSet:(NSSet<LanguageString*> *)setOfLanguageStrings;
++(nullable NSString*) bestMatchFromSet:(NSSet<LanguageString*> *)setOfLanguageStrings;
 
 -(instancetype) initWithLanguageCode:(NSString*)languageCode andString:(NSString*)string;
--(nullable instancetype) init __attribute__((unavailable("init not available")));
+-(instancetype) init __attribute__((unavailable("init not available")));
 @end
 NS_ASSUME_NONNULL_END

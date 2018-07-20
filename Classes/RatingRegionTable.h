@@ -28,26 +28,17 @@
 //
 
 #import "ATSCTables.h"
-
-@class LanguageString;
+#import "RatingValue.h"
+#import "RatingDimension.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface RatingValue : NSObject
-@property(nonatomic, readonly) NSArray<LanguageString*>* __nullable abbreviatedValues;
-@property(nonatomic, readonly) NSArray<LanguageString*> *__nullable  values;
-@end
-
-@interface RatingDimension : NSObject
-@property(nonatomic, readonly) NSArray<LanguageString*>* __nullable names;
-@property(nonatomic, readonly) BOOL isGraduatedScale;
-@property(nonatomic, readonly) NSArray<RatingValue*>* __nullable values; // RatingValue
-@end
+@class LanguageString;
 
 @interface RatingRegionTable : ATSCTable
 @property(nonatomic, readonly) unsigned char rating_region; // US, Canada, Taiwan...
-@property(nonatomic, readonly) NSArray<LanguageString*> * __nullable names;
-@property(nonatomic, readonly) NSArray<RatingDimension*> * rating_dimensions;
+@property(nonatomic, readonly, nullable) NSArray<LanguageString*> *   names;
+@property(nonatomic, readonly) NSArray<RatingDimension*> *              rating_dimensions;
 
 @end
 

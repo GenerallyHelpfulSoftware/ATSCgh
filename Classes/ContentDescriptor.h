@@ -35,9 +35,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ContentDescriptor : NSObject
+@interface BaseDescriptor : NSObject
+
+@end
+
+@interface ContentDescriptor : BaseDescriptor
 -(instancetype) initWithRawData:(const unsigned char*)streamData;
--(nullable instancetype) init __attribute__((unavailable("init not available")));
+-(instancetype) init __attribute__((unavailable("init not available")));
 @end
 
 NS_ASSUME_NONNULL_END

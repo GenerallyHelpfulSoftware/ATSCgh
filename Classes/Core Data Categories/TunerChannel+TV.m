@@ -14,12 +14,10 @@
 #import "ExtendedTextTable.h"
 #import "AudioStreamDescriptor.h"
 #import "Rating+TV.h"
-#import "Tower.h"
-#import "TVBroadcaster.h"
-#import "TunerSubchannel+TV.h"
 #import "HDHomeRunWrapper.h"
 #import "StringConstants.h"
 #import "BroadcasterModel.h"
+#import "SignalGH-Swift.h"
 
 @implementation TunerChannel (TV)
 
@@ -49,7 +47,11 @@
         NSString* callSign = self.callsign;
         if(callSign.length)
         {
-            if([callSign hasSuffix:@"-HD"])
+            if([callSign hasSuffix:@"SD1"])
+            {
+                callSign = [callSign stringByReplacingOccurrencesOfString:@"SD1" withString:@"-TV"];
+            }
+            else if([callSign hasSuffix:@"-HD"])
             {
                 callSign = [callSign stringByReplacingOccurrencesOfString:@"-HD" withString:@"-TV"];
             }
@@ -78,6 +80,7 @@
 -(Network*) network
 {
     __block Network* result = nil;
+    __block NSString* callSign = nil;
     [self.managedObjectContext performBlockAndWait:^{
         for(TunerSubchannel* subChannel in self.subchannels)
         {
@@ -96,7 +99,17 @@
             result = networks.anyObject;
             
         }
+        callSign = self.callsign;
     }];
+    
+    if(result == nil)
+    {
+        if(callSign.length)
+        {
+            result = [[BroadcasterModel sharedModel] networkNamed:callSign];
+        }
+    }
+    
     return result;
 }
 
